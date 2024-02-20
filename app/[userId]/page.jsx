@@ -1,11 +1,12 @@
 "use client"
 import React, { useEffect,useState } from 'react'
-import app from '../Shared/firebaseConfig';
+import { db } from '../firebaseConfig';
 import UserInfo from './../components/UserInfo'
 import { collection, getDocs,getDoc,doc, getFirestore, query, where } from 'firebase/firestore'
 import PinList from './../components/Pins/PinList'
+
 function Profile({params}) {
-  const db=getFirestore(app);
+
   const [userInfo,setUserInfo]=useState();
   const [listOfPins,setListOfPins]=useState([]);
   useEffect(()=>{
@@ -15,7 +16,6 @@ function Profile({params}) {
       getUserInfo(params.userId.replace('%40','@'))
     }
   },[params]);
-
 
   const getUserInfo=async(email)=>{
     const docRef = doc(db, "user",email );
