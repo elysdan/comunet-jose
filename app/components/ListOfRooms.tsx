@@ -13,6 +13,8 @@ import { db } from "../firebaseConfig";
 import { useSession} from "next-auth/react"
 import Message from "./Message";
 import SendMessage from "./SendMessage";
+import { doc, deleteDoc } from "firebase/firestore";
+
 
 type roomType = {
     id: string,
@@ -57,6 +59,10 @@ const ListOfContacts = ({
     };
   },[session])
 
+  const handleDelete = async (id:string) => {
+    await deleteDoc(doc(db, "rooms", id));
+  }
+
   return (
     <>
       <h2 className="px-4 py-2 font-bold text-lg">
@@ -64,12 +70,16 @@ const ListOfContacts = ({
       </h2>
       <div className="flex px-4 py-2 flex-col gap-3">
         {rooms.map(room => (
-          <button
-            key={room.id} 
-            onClick={() => onSelect(room.id)}
-            className="flex p-2 hover:bg-zinc-900/80 transition rounded-md cursor-pointer flex-row gap-4">
-            {room.receiver}
-          </button>
+          <div key={room.id}  className="w-full flex flex-row items-center">
+            <button
+              onClick={() => onSelect(room.id)}
+              className="flex w-full p-2 hover:bg-zinc-900/80 transition rounded-md cursor-pointer flex-row gap-4">
+              {room.receiver}
+            </button>
+            <button onClick={() => handleDelete(room.id)}>
+              borrar
+            </button>
+          </div>
         ))}
       </div>
     </>

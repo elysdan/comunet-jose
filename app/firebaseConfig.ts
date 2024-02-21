@@ -1,18 +1,20 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage"
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD4bVVATRKHCRuozJAq2tTCp_N7FS8JnO4",
-  authDomain: "comunet-jose.firebaseapp.com",
-  projectId: "comunet-jose",
-  storageBucket: "comunet-jose.appspot.com",
-  messagingSenderId: "11303678718",
-  appId: "1:11303678718:web:5812d41fc07c2d66bb2baf",
-  measurementId: "G-WMB6TNN2VS"
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID, 
+  appId: process.env.NEXT_PUBLIC_APP_ID, 
 };
 
 const app = initializeApp(firebaseConfig);
 
+export const storage = getStorage(app)
 export const auth = getAuth(app);
 export const db = getFirestore(app);

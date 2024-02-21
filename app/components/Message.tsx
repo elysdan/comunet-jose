@@ -23,9 +23,9 @@ const Message = ({
         session.user.email === message.uid ? "ml-auto" : "mr-auto"
       )}
     >
-      <div className="bg-zinc-800 rounded-md py-3 max px-4">
+      <div className="bg-zinc-800 rounded-md py-3 max-w-sm px-4">
         <p className="text-right font-semibold text-[15px]">{message.name}</p>
-        <p className="user-message">{message.text}</p>
+        <p className="user-messag">{message.text}</p>
       </div>
       <img
         className="rounded-full w-10 h-10"

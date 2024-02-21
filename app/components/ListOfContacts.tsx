@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useSession } from "next-auth/react";
+import { getDocs } from "firebase/firestore";
 
 type contactType = {
   id: string;
@@ -51,8 +52,27 @@ const ListOfContacts = () => {
   }, [session]);
 
   const handleCreateRoom = async (receiver: string) => {
-    console.log(receiver);
+    
+    const q = query(
+      collection(db, "rooms"),
+      where("members", "array-contains", session?.user?.email),
+    );
 
+    const querySnapshot = await getDocs(q);
+
+    if(querySnapshot){
+      let grouptMembers;
+      let isFound = false;
+      querySnapshot.forEach(val => {
+        grouptMembers = val.data().members;
+
+        if(grouptMembers.includes(receiver)){
+          isFound = true;
+          return;
+        }
+      })
+      if(isFound) return;
+    }
     await addDoc(collection(db, "rooms"), {
       id: uuidv4(),
       members: [session?.user?.email, receiver],

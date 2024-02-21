@@ -6,6 +6,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { HiSearch, HiBell, HiChat } from "react-icons/hi";
 import { db } from "../firebaseConfig";
 import { useRouter } from "next/navigation";
+import Link from 'next/link'
 
 function Header() {
   const { data: session } = useSession();
@@ -34,27 +35,25 @@ function Header() {
   };
 
   return (
-    <div className="flex justify-between gap-3 md:gap-2 items-center p-6">
-      <Image
-        src="/logo.png"
-        alt="logo_comunet"
-        width={50}
-        height={50}
-        className="hover:bg-gray-300 p-2 rounded-full cursor-pointer"
-        onClick={() => router.push("/")}
-      />
-      <button
+    <nav className="flex justify-between gap-3 md:gap-2 items-center p-6">
+      <Link href="/" className="w-10 h-10">
+        <img
+          src="/logo.png"
+          className="hover:bg-gray-300 min-w-10 min-h-10 rounded-full cursor-pointer"
+        />
+      </Link>
+      <Link 
+        href="/"
         className="bg-black text-white p-2 px-4 rounded-full hidden md:block"
-        onClick={() => router.push("/")}
       >
         Inicio
-      </button>
-      <button
+      </Link>
+      <Link 
+        href="/pin-builder"
         className="font-semibold p-2 px-4 rounded-full"
-        onClick={() => onCreateClick()}
       >
         Crear
-      </button>
+      </Link>
       <div className="bg-[#e9e9e9] p-3 w-full flex gap-3 items-center rounded-full hidden md:flex">
         <HiSearch
           className="text-[25px]
@@ -68,23 +67,23 @@ function Header() {
           className="bg-transparent outline-none"
         />
       </div>
-      <HiBell
+      {/*<HiBell
         className="text-[25px] md:text-[40px]
             text-gray-500"
-      />
-      <HiChat
-        className="text-[25px] md:text-[40px]
-            text-gray-500"
-      />
-      {session?.user ? (
-        <Image
-          src={session?.user?.image}
-          onClick={() => router.push("/" + session.user.email)}
-          alt="user_image"
-          width={50}
-          height={50}
-          className="hover:bg-gray-300 p-2 rounded-full cursor-pointer"
+      />*/}
+      <Link href="/chatbox">
+        <HiChat
+          className="text-[25px] md:text-[40px] text-gray-500"
         />
+      </Link>
+      {session?.user ? (
+        <Link href={"/" + session.user.email} className="w-10 h-10">
+          <img
+            src={session?.user?.image}
+            alt="user_image"
+            className="hover:bg-gray-300 min-w-10 min-h-10 rounded-full cursor-pointer"
+          />
+        </Link>
       ) : (
         <button
           className="font-semibold p-2 px-4 rounded-full"
@@ -93,7 +92,7 @@ function Header() {
           Iniciar Sesion
         </button>
       )}
-    </div>
+    </nav>
   );
 }
 
