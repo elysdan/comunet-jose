@@ -14,18 +14,18 @@ export default function Home() {
   useEffect(()=>{
     getAllPins();
   },[])
+
   const getAllPins=async()=>{
     setListOfPins([])
+    const result = []
       const q=query(collection(db,
         'comunet-post')
       );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
-       
-       
-      setListOfPins((listOfPins)=>
-      [...listOfPins,doc.data()]);
-      });
+      result.push(doc.data())       
+    });
+    setListOfPins(result);
   }
 
   return (
