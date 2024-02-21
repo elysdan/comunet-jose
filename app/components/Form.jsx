@@ -1,11 +1,10 @@
 "use client"
-import React,{useState} from 'react'
+import React, {useState} from 'react'
 import UploadImage from './UploadImage'
 import { useSession} from "next-auth/react"
 import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage"
 import UserTag from './UserTag'
-import app from '../firebaseConfig'
-import { doc, getFirestore, setDoc } from 'firebase/firestore'
+import { db, storage } from '../firebaseConfig'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
@@ -17,14 +16,10 @@ function Form() {
     const [file,setFile]=useState();
     const [loading,setLoading]=useState(false);
     const router=useRouter();
-    const storage=getStorage(app)
-    const db=getFirestore(app);
     const postId=Date.now().toString();
     const onSave=()=>{
        setLoading(true)
        uploadFile();
-   
-
     }
 
     const uploadFile=()=>{
