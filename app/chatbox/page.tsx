@@ -5,10 +5,10 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { collection, getDocs, getFirestore, query } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useEffect, useState } from "react";
-import PinList from "../components/Pins/PinList";
-import Chatbox from "../components/Chatbox";
-import ListOfContacts from "../components/ListOfContacts";
-import ListOfRooms from "../components/ListOfRooms";
+import PinList from "../../src/components/Pins/PinList";
+import Chatbox from "../../src/components/Chatbox";
+import ListOfContacts from "../../src/components/ListOfContacts";
+import ListOfRooms from "../../src/components/ListOfRooms";
 import { Tab } from "@headlessui/react";
 
 export default function Home() {
