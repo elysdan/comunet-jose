@@ -1,61 +1,51 @@
-"use client";
-import React, { useState } from "react";
-import UploadImage from "./UploadImage";
-import { useSession } from "next-auth/react";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import UserTag from "./UserTag";
-import { db, storage } from "../firebaseConfig";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { setDoc, doc } from "firebase/firestore";
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod' ;
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-function Form() {
-  const { data: session } = useSession();
+import * as z from 'zod';
+
+const createPinValidator = z.object({
+  description: z.string(),
+  link: z.string(),
+  file: z.any(),
+  title: z.string()
+})
+
+function PinBuilder() {
+
   const [title, setTitle] = useState();
   const [desc, setDesc] = useState();
   const [link, setLink] = useState();
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
   const postId = Date.now().toString();
   const onSave = () => {
     setLoading(true);
     uploadFile();
   };
 
-  const uploadFile = () => {
-    const storageRef = ref(storage, "comunet/" + file.name);
-    uploadBytes(storageRef, file)
-      .then((snapshot) => {
-        console.log("File Uploaded");
-      })
-      .then((resp) => {
-        if(!session) return;
-        getDownloadURL(storageRef).then(async (url) => {
-          console.log("DownloadUrl", url);
-          const postData = {
-            title: title,
-            desc: desc,
-            link: link,
-            image: url,
-            userName: session.user.name,
-            email: session.user.email,
-            userImage: session.user.image,
-            id: postId,
-          };
+  const supabase = createClientComponentClient();
 
-          await setDoc(doc(db, "comunet-post", postId), postData).then(
-            (resp) => {
-              console.log("Saved");
-              setLoading(true);
-              router.push("/" + session.user.email);
-            }
-          );
-        });
-      });
+  const uploadFile = async (file): string => {
+    const bucket = "pins";
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(file.name, file);
+
+    if(error) {
+      alert('Error uploading file.');
+      return '';
+    }
+
+    return data.path;
   };
 
   return (
+    <div className='bg-zinc-950 min-h-screen p-8 
+    px-[10px] md:px-[160px]'>
     <div className=" bg-zinc-950 p-16 rounded-2xl ">
       <div className="flex justify-end mb-6 gap-4">
          <UserTag user={session?.user} />
@@ -111,7 +101,8 @@ function Form() {
         </div>
       </div>
     </div>
-  );
+    </div>
+  )
 }
 
-export default Form;
+export default PinBuilder
